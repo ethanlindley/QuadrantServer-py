@@ -16,9 +16,11 @@ class PacketHandler:
 
         if packet[0] == "%":
             print "Received RAW data type!"
+            print packet  # debug
             self.handleRAWPacket(packet)
         elif packet[0] == "<":
             print "Received XML data type!"
+            print packet  # debug
             self.handleXMLPacket(packet)
         else:
             print "Received an unknown packet: %s" % packet
@@ -78,8 +80,8 @@ class PacketHandler:
     def handleXMLPacket(self, packet):
         # the policy file tells the client where they can connect to via sockets
         if packet == "<policy-file-request/>\0":
-            self.sendPacket("<cross-domain-policy><allow-access-from domain='*' "
-                            "to-ports='*' /></cross-domain-policy>\0", 6112)
+            self.sendPacket(
+                "<cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>\0", 6112)
         # we receive the version of the client and then we compare it with what it should be
         # we reply with OK if the version checks out and KO if it does not
         elif "<msg t='sys'><body action='verChk'" in packet:
