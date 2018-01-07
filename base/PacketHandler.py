@@ -104,12 +104,14 @@ class PacketHandler:
             print "rogue XML packet: %s" % packet
 
     def sendPacket(self, packet, port):
-        host = "localhost"
+        host = socket.gethostbyname("localhost")
+        addr = (host, port)
+
         # let's open the socket and connect to the desired server
         # packet will either be sent to login or game server depending on args passed through
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, port))
-        s.sendto(packet, (host, port))
+        s.connect(addr)
+        s.send(packet)
         # finally, let's close the socket as we don't need it any more until we need to send another
         # packet to the server
         s.close()

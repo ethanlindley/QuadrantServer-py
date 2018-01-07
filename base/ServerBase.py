@@ -21,7 +21,7 @@ class ServerBase(PacketHandler):
         s.listen(10000)
 
         while True:
-            data = s.accept()
+            data = s.recv(1024)
             self.handlePacket(data)
 
     def startLoginServer(self):
@@ -38,5 +38,5 @@ class ServerBase(PacketHandler):
         s.listen(10000)
 
         while True:
-            data = s.accept()
+            data = s.recv(1024)
             self.handlePacket(data)
