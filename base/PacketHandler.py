@@ -1,11 +1,15 @@
-from ServerBase import ServerBase
 import socket
+import os
+import binascii
 
 
-class PacketHandler(ServerBase):
+class PacketHandler:
 
     def __init__(self):
-        ServerBase.__init__(self)
+        self.mod = "0"
+        self.auth = False
+        self.username = ""
+        self.key = ""
 
     def handlePacket(self, packet):
         packet = str(packet)
@@ -117,3 +121,14 @@ class PacketHandler(ServerBase):
 
     def getNthString(self, string, substring, index):
         return len(string.split(substring, index).join(substring))
+
+    def generateKey(self):
+        key = binascii.b2a_hex(os.urandom(5))
+        return key
+
+    def checkVersion(self, ver):
+        # TODO: don't hard set the version
+        if ver == "153":
+            self.sendPacket("<msg t='sys'><body action='apiOK' r='0'></body></msg>\0", 6112)
+        else:
+            self.sendPacket("<msg t='sys'><body action='apiKO' r='0'></body></msg>\0", 6112)
