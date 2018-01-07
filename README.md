@@ -7,4 +7,4 @@
 * `python -m base.StartGameServer`
 
 ## Notes
-* Currently, the login logic still needs to be worked on. See issue #2 for more details.
+* Currently, the login logic still needs to be worked on. See issues for more details.
