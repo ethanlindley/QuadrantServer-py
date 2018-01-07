@@ -20,9 +20,10 @@ class ServerBase(PacketHandler):
         print "debug:: game server now listening on port %s" % port
         s.listen(10000)
 
-        while True:
-            data = s.recv(1024)
-            self.handlePacket(data)
+        conn, addr = s.accept()
+        data = conn.recv(1024)
+        self.handlePacket(data)
+        conn.close()
 
     def startLoginServer(self):
         host = None
@@ -37,6 +38,7 @@ class ServerBase(PacketHandler):
         print "debug:: login server now listening on port %s" % port
         s.listen(10000)
 
-        while True:
-            data = s.recv(1024)
-            self.handlePacket(data)
+        conn, addr = s.accept()
+        data = conn.recv(1024)
+        self.handlePacket(data)
+        conn.close()
