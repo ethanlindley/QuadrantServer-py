@@ -1,58 +1,25 @@
 import os
 import binascii
-import socket
-import sys
+from base.ServerBase import ServerBase
 
 
-class LoginServer:
+class LoginServer(ServerBase):
 
     """ main login module for login server base """
 
     def __init__(self):
+        ServerBase.__init__(self)
+
         self.key = ""
         self.s = None
 
         self.startServer()
 
     def startServer(self):
-        host = ""
+        host = "localhost"
         port = 6112
-        recv_buffer = 4096
-        connections = []
-
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-        print "socket created"  # debug
-        # let's bind the socket to our desired host and port
-        try:
-            self.s.bind((host, port))
-        except socket.error as msg:
-            print "server failed to initialize... message: %s" % msg
-            sys.exit()
-        print "successfully initialized the server"
-
-        self.s.listen(10)  # let's start listening on the socket
-
-        # let's continue communicating with the client
-        sockfd, addr = self.s.accept()
-        while True:
-            for sock in connections:
-                # handle new connection
-                if sock == self.s:
-                    # handle the case in which there is a new connection received through the server socket
-                    connections.append(sockfd)
-                    print "client (%s, %s) has connected" % (sockfd, addr)
-                # let's handle an incoming message from a client
-                else:
-                    try:
-                        data = sock.recv(recv_buffer)
-                        self.handlePacket(data)
-                    except:
-                        print "client (%s, %s) has disconnected" % (sockfd, addr)
-                        sock.close()
-                        connections.remove(sock)
-                        continue
+        buffer_size = 4096
+        self.startLoginServer(host, port, buffer_size)
 
     def handlePacket(self, packet):
         if packet == "<policy-file-request/>\0":
