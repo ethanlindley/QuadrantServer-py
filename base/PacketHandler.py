@@ -109,7 +109,7 @@ class PacketHandler:
         # packet will either be sent to login or game server depending on args passed through
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, port))
-        s.send(packet)
+        s.sendto(packet, (host, port))
         # finally, let's close the socket as we don't need it any more until we need to send another
         # packet to the server
         s.close()
