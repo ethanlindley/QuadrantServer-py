@@ -1,5 +1,5 @@
 @echo off
-title cpl gs
+title game server
 
 cd ../
 

@@ -1,5 +1,5 @@
 @echo off
-title cpl ls
+title login server
 
 cd ../
 
