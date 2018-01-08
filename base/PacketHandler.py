@@ -36,9 +36,13 @@ class PacketHandler:
         self.key = ""
 
         self.conn = None
+        self.client_host = None
+        self.client_port = None
 
-    def setup(self, connection):
+    def setup(self, connection, host, port):
         self.conn = connection
+        self.client_host = str(host)
+        self.client_port = int(port)
 
     def handlePacket(self, packet):
         packet = str(packet)
@@ -113,9 +117,10 @@ class PacketHandler:
                 "<cross-domain-policy><allow-access-from domain='*' to-ports='*' /></cross-domain-policy>\0")
         # we receive the version of the client and then we compare it with what it should be
         # we reply with OK if the version checks out and KO if it does not
-        elif "<msg t='sys'><body action='verChk'" in packet:
-            ver = self.getXMLString(packet, "<ver v='", "'", 8)
+        elif "<body action='verChk' r='0'>" in packet:
+            ver = self.getXMLString(packet, "<ver v='", "'", 7)
             self.checkVersion(ver)
+            print "(login) - debug:: done sending API response"
         # this is the client asking for a random key to salt their hashed password
         # we store the key so that we can pull the hashed password out of the db,
         # salt it with the key, and then compare them
@@ -135,19 +140,22 @@ class PacketHandler:
             print "rogue XML packet: %s" % packet
 
     def sendPacket(self, packet):
-        # packet needs to be sent to the client, so let's do so!
-        self.conn.send(packet)
-        # finally, let's close the socket as we don't need it any more until we need to send another
-        # packet to the server
+        # packet needs to be sent to a client, so let's do so!
+        client = (self.client_host, self.client_port)
+        self.conn.sendto(packet, client)
+        # finally, let's close the connection as we don't need it any more until we need to send another
+        # packet to a client
         self.conn.close()
 
     def getXMLString(self, _input, left, right, occurrence):
-        stringL = _input.index(left) + len(left)
-        stringR = self.getNthString(_input, right, occurrence) + stringL
-        return _input[stringL] + _input[stringR - stringL]
+        # TODO: properly repair this function
+        string = self.getNthString(_input, right, occurrence)
+        return str(string)
 
     def getNthString(self, string, substring, index):
-        return len(string.split(substring, index).join(substring))
+        # TODO: properly repair this function
+        a = string.split(substring, index)
+        return str(a[index])
 
     def generateKey(self):
         key = binascii.b2a_hex(os.urandom(5))
@@ -155,7 +163,9 @@ class PacketHandler:
 
     def checkVersion(self, ver):
         # TODO: don't hard set the version
-        if ver == "153":
+        if "153" in ver:
+            print "(login) - debug:: sending OK API response to client.."
             self.sendPacket("<msg t='sys'><body action='apiOK' r='0'></body></msg>\0")
         else:
+            print "(login) - debug:: sending KO API response to client.."
             self.sendPacket("<msg t='sys'><body action='apiKO' r='0'></body></msg>\0")

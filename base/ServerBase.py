@@ -63,6 +63,7 @@ class ServerBase(PacketHandler):
         while True:
             conn, addr = s.accept()
             data = conn.recv(1024)
-            self.setup(conn)
+            client_host = str(addr[0])
+            client_port = int(addr[1])
+            self.setup(conn, client_host, client_port)
             self.handlePacket(data)
-            conn.close()
