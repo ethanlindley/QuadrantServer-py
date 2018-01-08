@@ -29,6 +29,7 @@ class GameServer(ServerBase):
 
     def __init__(self):
         ServerBase.__init__(self)
+        self.startServer()
 
     def startServer(self):
         host = None
