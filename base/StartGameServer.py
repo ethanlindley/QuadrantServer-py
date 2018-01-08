@@ -29,8 +29,10 @@ class StartGameServer(GameServer):
 
     def __init__(self):
         GameServer.__init__(self)
+        host = None
+        port = 6113
         print "debug:: starting game server..."
-        self.startServer()
+        self.startGameServer(host, port)
 
 
 game = StartGameServer()

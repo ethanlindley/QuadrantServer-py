@@ -31,9 +31,7 @@ class ServerBase(PacketHandler):
     def __init__(self):
         PacketHandler.__init__(self)
 
-    def startGameServer(self):
-        host = None
-        port = 6113
+    def startGameServer(self, host, port):
 
         for socket_information in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
             family, _type, prototype, name, socket_address = socket_information
@@ -47,12 +45,11 @@ class ServerBase(PacketHandler):
         while True:
             conn, addr = s.accept()
             data = conn.recv(1024)
+            self.setup(conn)
             self.handlePacket(data)
             conn.close()
 
-    def startLoginServer(self):
-        host = None
-        port = 6112
+    def startLoginServer(self, host, port):
 
         for socket_information in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
             family, _type, prototype, name, socket_address = socket_information
@@ -66,5 +63,6 @@ class ServerBase(PacketHandler):
         while True:
             conn, addr = s.accept()
             data = conn.recv(1024)
+            self.setup(conn)
             self.handlePacket(data)
             conn.close()
