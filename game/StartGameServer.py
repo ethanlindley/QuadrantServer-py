@@ -34,3 +34,6 @@ class GameServer(ServerBase):
         host = None
         port = 6113
         self.startGameServer(host, port)
+
+
+server = GameServer()
