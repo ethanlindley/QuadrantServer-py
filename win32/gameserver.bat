@@ -4,6 +4,6 @@ title cpl gs
 cd ../
 
 :main
-python -m base.StartGameServer
+python -m game.StartGameServer
 pause
 goto main

@@ -1,4 +1,4 @@
-from game.server import GameServer
+from base.ServerBase import ServerBase
 
 """
 MIT License
@@ -25,14 +25,12 @@ SOFTWARE.
 """
 
 
-class StartGameServer(GameServer):
+class LoginServer(ServerBase):
 
     def __init__(self):
-        GameServer.__init__(self)
+        ServerBase.__init__(self)
+
+    def startServer(self):
         host = None
-        port = 6113
-        print "debug:: starting game server..."
-        self.startGameServer(host, port)
-
-
-game = StartGameServer()
+        port = 6112
+        self.startLoginServer(host, port)

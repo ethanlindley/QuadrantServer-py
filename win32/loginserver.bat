@@ -4,6 +4,6 @@ title cpl ls
 cd ../
 
 :main
-python -m base.StartLoginServer
+python -m login.StartLoginServer
 pause
 goto main
